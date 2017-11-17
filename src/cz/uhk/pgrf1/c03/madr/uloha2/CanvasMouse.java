@@ -22,11 +22,9 @@ import cz.uhk.pgrf1.c03.madr.uloha2.render.PolygonRenderer;
 
 /**
  * trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi
- * 
  * drzenim a tazenim leveho tlacitka krelim primku a pridavam body polygonu
  * drzenim a tazenim praveho tlacitka vykresluju kruznici, po spusteni kreslim
  * vysec pomoci tazeni mysi
- * 
  * @author PGRF FIM UHK
  * @version 2017
  */
