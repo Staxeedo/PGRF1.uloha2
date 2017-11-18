@@ -21,6 +21,7 @@ import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.LineRenderer;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.PolygonRenderer;
+import cz.uhk.pgrf1.c03.madr.uloha2.render.SeedFillRenderer;
 
 /**
  * trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi drzenim a
@@ -124,53 +125,68 @@ public class CanvasMouse {
 
 					}
 				}
+
+				else {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						SeedFillRenderer sfren = new SeedFillRenderer(img);
+						switch (mode) {
+						case 1:
+							
+							break;
+						case 2:
+							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()));
+							panel.repaint();
+							break;
+						}
+					}
+				}
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				
 				PolygonRenderer pren = new PolygonRenderer(img);
-				if(mode==0)
-				{
-				if (e.getButton() == MouseEvent.BUTTON1) {
-					// Pokud chci vykreslit usecku se stejnym bodem (2x kliknu na jedno misto)
-					if (tempLine.getLast() == null)
-						tempLine.setLast(tempLine.getFirst());
-					step = 0;
-					clear();
-					panel.repaint();
-					// pokud jsem neuvolnil tlacitko mimo platno, tak pridam bod polygonu
-					if (outOfField) {
-						outOfField = false;
+				if (mode == 0) {
+					if (e.getButton() == MouseEvent.BUTTON1) {
+						// Pokud chci vykreslit usecku se stejnym bodem (2x kliknu na jedno misto)
+						if (tempLine.getLast() == null)
+							tempLine.setLast(tempLine.getFirst());
+						step = 0;
+						clear();
+						panel.repaint();
+						// pokud jsem neuvolnil tlacitko mimo platno, tak pridam bod polygonu
+						if (outOfField) {
+							outOfField = false;
 
-					} else {
-						pol.add(tempLine.getLast());
+						} else {
+							pol.add(tempLine.getLast());
+						}
+
+						pren.draw(pol, 0xFFFF00);
+						pren.draw(polCutter, 0x0000FF);
+						// Pokud se na platne nachazi vysec, tak ji vykreslim (bylo vypocitano r)
+
+					}
+
+					if (e.getButton() == MouseEvent.BUTTON3) {
+
+						step = 0;
+						clear();
+						panel.repaint();
+						if (outOfField) {
+							outOfField = false;
+
+						} else {
+							polCutter.add(tempLine.getLast());
+						}
+
 					}
 
 					pren.draw(pol, 0xFFFF00);
 					pren.draw(polCutter, 0x0000FF);
-					// Pokud se na platne nachazi vysec, tak ji vykreslim (bylo vypocitano r)
 
 				}
-
-				if (e.getButton() == MouseEvent.BUTTON3) {
-
-					step = 0;
-					clear();
-					panel.repaint();
-					if (outOfField) {
-						outOfField = false;
-
-					} else {
-						polCutter.add(tempLine.getLast());
-					}
-
-				}
-
-				pren.draw(pol, 0xFFFF00);
-				pren.draw(polCutter, 0x0000FF);
-
 			}
-		}
 		}
 
 		);
@@ -184,16 +200,56 @@ public class CanvasMouse {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if(mode==0) {
-				Point p = new Point(e.getX(), e.getY());
+				if (mode == 0) {
+					Point p = new Point(e.getX(), e.getY());
 
-				tempLine.setLast(p);
-				clear();
-				if (step == 1) {
+					tempLine.setLast(p);
+					clear();
+					if (step == 1) {
 
-					if (pol.getSize() >= 2) {
+						if (pol.getSize() >= 2) {
+							tempLine2.setLast(p);
+							tempLine2.setFirst(pol.getPoint(0));
+							pren.draw(pol, 0xFFFF00);
+							pren.draw(polCutter, 0x0000FF);
+
+							try {
+								lren.draw(tempLine, 0xFF0000);
+								lren.draw(tempLine2, 0xFF0000);
+								// Bod je zpet na platne
+								if (outOfField == true) {
+									outOfField = false;
+								}
+
+							} catch (ArrayIndexOutOfBoundsException exception) {
+								outOfField = true;
+								clear();
+								pren.draw(pol, 0xFFFF00);
+								pren.draw(polCutter, 0x0000FF);
+							}
+						}
+
+						else {
+							// pro vykresleni prvni cary
+							pren.draw(polCutter, 0x0000FF);
+							try {
+								lren.draw(tempLine, 0xFF0000);
+								if (outOfField == true) {
+									outOfField = false;
+								}
+							} catch (ArrayIndexOutOfBoundsException exception) {
+								outOfField = true;
+								clear();
+								pren.draw(pol, 0xFFFF00);
+								pren.draw(polCutter, 0x0000FF);
+							}
+
+						}
+
+					} else if (step == 2) {
+						System.out.println("2");
 						tempLine2.setLast(p);
-						tempLine2.setFirst(pol.getPoint(0));
+						tempLine2.setFirst(polCutter.getPoint(0));
 						pren.draw(pol, 0xFFFF00);
 						pren.draw(polCutter, 0x0000FF);
 
@@ -211,53 +267,13 @@ public class CanvasMouse {
 							pren.draw(pol, 0xFFFF00);
 							pren.draw(polCutter, 0x0000FF);
 						}
-					}
-
-					else {
-						// pro vykresleni prvni cary
-						pren.draw(polCutter, 0x0000FF);
-						try {
-							lren.draw(tempLine, 0xFF0000);
-							if (outOfField == true) {
-								outOfField = false;
-							}
-						} catch (ArrayIndexOutOfBoundsException exception) {
-							outOfField = true;
-							clear();
-							pren.draw(pol, 0xFFFF00);
-							pren.draw(polCutter, 0x0000FF);
-						}
 
 					}
 
-				} else if (step == 2) {
-					System.out.println("2");
-					tempLine2.setLast(p);
-					tempLine2.setFirst(polCutter.getPoint(0));
-					pren.draw(pol, 0xFFFF00);
-					pren.draw(polCutter, 0x0000FF);
-
-					try {
-						lren.draw(tempLine, 0xFF0000);
-						lren.draw(tempLine2, 0xFF0000);
-						// Bod je zpet na platne
-						if (outOfField == true) {
-							outOfField = false;
-						}
-
-					} catch (ArrayIndexOutOfBoundsException exception) {
-						outOfField = true;
-						clear();
-						pren.draw(pol, 0xFFFF00);
-						pren.draw(polCutter, 0x0000FF);
-					}
+					panel.repaint();
 
 				}
-
-				panel.repaint();
-
 			}
-		}
 		});
 
 	}
