@@ -2,9 +2,9 @@ package cz.uhk.pgrf1.c03.madr.uloha2.render;
 
 import java.awt.image.BufferedImage;
 
-public class SeedFill extends Renderer {
+public class SeedFillRenderer extends Renderer {
 
-	public SeedFill(BufferedImage img) {
+	public SeedFillRenderer(BufferedImage img) {
 		super(img);
 	}
 

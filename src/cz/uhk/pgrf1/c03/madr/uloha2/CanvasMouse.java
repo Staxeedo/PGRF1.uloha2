@@ -8,9 +8,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -21,10 +23,11 @@ import cz.uhk.pgrf1.c03.madr.uloha2.render.LineRenderer;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.PolygonRenderer;
 
 /**
- * trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi
- * drzenim a tazenim leveho tlacitka krelim primku a pridavam body polygonu
- * drzenim a tazenim praveho tlacitka vykresluju kruznici, po spusteni kreslim
- * vysec pomoci tazeni mysi
+ * trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi drzenim a
+ * tazenim leveho tlacitka krelim primku a pridavam body polygonu drzenim a
+ * tazenim praveho tlacitka vykresluju kruznici, po spusteni kreslim vysec
+ * pomoci tazeni mysi
+ * 
  * @author PGRF FIM UHK
  * @version 2017
  */
@@ -44,6 +47,7 @@ public class CanvasMouse {
 	 * Promenna slouzici pro zapamatovani modu 0 zacinam kreslit novy polygon 1
 	 * kresleni polygonu
 	 */
+	int step = 0;
 	int mode = 0;
 
 	public CanvasMouse(int width, int height) {
@@ -66,6 +70,25 @@ public class CanvasMouse {
 		};
 		panel.setPreferredSize(new Dimension(width, height));
 
+		// Ovladaci panel
+		JPanel pnl = new JPanel();
+		frame.add(pnl, BorderLayout.NORTH);
+		JRadioButton polygonButton = new JRadioButton("Draw Polygons");
+		polygonButton.addActionListener(e -> setMode(0));
+		polygonButton.setSelected(true);
+		JRadioButton seedFillButton = new JRadioButton("Fill with SeedFill");
+		seedFillButton.addActionListener(e -> setMode(2));
+		JRadioButton scanLineButton = new JRadioButton("Fill with ScanLine");
+		scanLineButton.addActionListener(e -> setMode(1));
+		ButtonGroup group = new ButtonGroup();
+		group.add(polygonButton);
+		group.add(seedFillButton);
+		group.add(scanLineButton);
+		pnl.add(polygonButton);
+		pnl.add(scanLineButton);
+		pnl.add(seedFillButton);
+
+		// Konec ovladaciho panelu
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
@@ -75,42 +98,44 @@ public class CanvasMouse {
 
 			public void mousePressed(MouseEvent e) {
 				p = new Point(e.getX(), e.getY());
+				if (mode == 0) {
+					// Leve tlacitko
+					if (e.getButton() == MouseEvent.BUTTON1) {
 
-				// Leve tlacitko
-				if (e.getButton() == MouseEvent.BUTTON1) {
+						step = 1;
+						/*
+						 * Pokud jeste nemame prvni bod polygonu tak ho pridame a nastavime ho jako
+						 * prvni bod primky, jinak pocatecni bod primky je posledni bod polygonu
+						 */
+						if (pol.getSize() == 0) {
+							pol.add(p);
+							tempLine.setFirst(p);
+						} else {
 
-					mode = 1;
-					/*
-					 * Pokud jeste nemame prvni bod polygonu tak ho pridame a nastavime ho jako
-					 * prvni bod primky, jinak pocatecni bod primky je posledni bod polygonu
-					 */
-					if (pol.getSize() == 0) {
-						pol.add(p);
-						tempLine.setFirst(p);
-					} else {
+							tempLine.setFirst(pol.getLast());
+						}
+					}
 
-						tempLine.setFirst(pol.getLast());
+					// Prave tlacitko
+					if (e.getButton() == MouseEvent.BUTTON3) {
+
+						step = 2;
+						tempLine.setFirst(polCutter.getLast());
+
 					}
 				}
-
-				// Prave tlacitko
-				if (e.getButton() == MouseEvent.BUTTON3) {
-
-					mode = 2;
-					tempLine.setFirst(polCutter.getLast());
-
-				}
-
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				PolygonRenderer pren = new PolygonRenderer(img);
+				if(mode==0)
+				{
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					// Pokud chci vykreslit usecku se stejnym bodem (2x kliknu na jedno misto)
 					if (tempLine.getLast() == null)
 						tempLine.setLast(tempLine.getFirst());
-					mode = 0;
+					step = 0;
 					clear();
 					panel.repaint();
 					// pokud jsem neuvolnil tlacitko mimo platno, tak pridam bod polygonu
@@ -121,15 +146,15 @@ public class CanvasMouse {
 						pol.add(tempLine.getLast());
 					}
 
-					pren.draw(pol,0xFFFF00);
-					pren.draw(polCutter,0x0000FF);
+					pren.draw(pol, 0xFFFF00);
+					pren.draw(polCutter, 0x0000FF);
 					// Pokud se na platne nachazi vysec, tak ji vykreslim (bylo vypocitano r)
 
 				}
 
 				if (e.getButton() == MouseEvent.BUTTON3) {
-					
-					mode = 0;
+
+					step = 0;
 					clear();
 					panel.repaint();
 					if (outOfField) {
@@ -140,14 +165,12 @@ public class CanvasMouse {
 					}
 
 				}
-				
-				
-				pren.draw(pol,0xFFFF00);
-				pren.draw(polCutter,0x0000FF);
-			
-			
+
+				pren.draw(pol, 0xFFFF00);
+				pren.draw(polCutter, 0x0000FF);
 
 			}
+		}
 		}
 
 		);
@@ -161,18 +184,18 @@ public class CanvasMouse {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-
+				if(mode==0) {
 				Point p = new Point(e.getX(), e.getY());
 
 				tempLine.setLast(p);
 				clear();
-				if (mode == 1) {
+				if (step == 1) {
 
 					if (pol.getSize() >= 2) {
 						tempLine2.setLast(p);
 						tempLine2.setFirst(pol.getPoint(0));
-						pren.draw(pol,0xFFFF00);
-						pren.draw(polCutter,0x0000FF);
+						pren.draw(pol, 0xFFFF00);
+						pren.draw(polCutter, 0x0000FF);
 
 						try {
 							lren.draw(tempLine, 0xFF0000);
@@ -185,16 +208,14 @@ public class CanvasMouse {
 						} catch (ArrayIndexOutOfBoundsException exception) {
 							outOfField = true;
 							clear();
-							pren.draw(pol,0xFFFF00);
-							pren.draw(polCutter,0x0000FF);
+							pren.draw(pol, 0xFFFF00);
+							pren.draw(polCutter, 0x0000FF);
 						}
-					} 
-					
-					
-					
+					}
+
 					else {
 						// pro vykresleni prvni cary
-						pren.draw(polCutter,0x0000FF);
+						pren.draw(polCutter, 0x0000FF);
 						try {
 							lren.draw(tempLine, 0xFF0000);
 							if (outOfField == true) {
@@ -203,23 +224,18 @@ public class CanvasMouse {
 						} catch (ArrayIndexOutOfBoundsException exception) {
 							outOfField = true;
 							clear();
-							pren.draw(pol,0xFFFF00);
-							pren.draw(polCutter,0x0000FF);
+							pren.draw(pol, 0xFFFF00);
+							pren.draw(polCutter, 0x0000FF);
 						}
-						
-						
-						
-						
+
 					}
 
-				}
-				else if(mode==2)
-				{
+				} else if (step == 2) {
 					System.out.println("2");
 					tempLine2.setLast(p);
 					tempLine2.setFirst(polCutter.getPoint(0));
-					pren.draw(pol,0xFFFF00);
-					pren.draw(polCutter,0x0000FF);
+					pren.draw(pol, 0xFFFF00);
+					pren.draw(polCutter, 0x0000FF);
 
 					try {
 						lren.draw(tempLine, 0xFF0000);
@@ -232,17 +248,37 @@ public class CanvasMouse {
 					} catch (ArrayIndexOutOfBoundsException exception) {
 						outOfField = true;
 						clear();
-						pren.draw(pol,0xFFFF00);
-						pren.draw(polCutter,0x0000FF);
+						pren.draw(pol, 0xFFFF00);
+						pren.draw(polCutter, 0x0000FF);
 					}
-					
+
 				}
 
 				panel.repaint();
 
 			}
-
+		}
 		});
+
+	}
+
+	private void setMode(int number) {
+
+		switch (number) {
+		case 0:
+			mode = 0;
+			System.out.println(mode);
+			break;
+		case 1:
+
+			mode = 1;
+			System.out.println(mode);
+			break;
+		case 2:
+			mode = 2;
+			System.out.println(mode);
+			break;
+		}
 
 	}
 
@@ -261,7 +297,7 @@ public class CanvasMouse {
 		img.getGraphics().drawString("Use mouse buttons Left for polygon, Right for Circle Sector", 5,
 				img.getHeight() - 5);
 		PolygonRenderer pren = new PolygonRenderer(img);
-		pren.draw(polCutter,0x0000FF);
+		pren.draw(polCutter, 0x0000FF);
 		panel.repaint();
 	}
 
