@@ -36,4 +36,36 @@ public class Line {
 		this.last = p;
 	}
 
+	public Boolean isHorizontal() {
+		// usecka je vodorovna
+		return (int) first.getY() == (int) last.getY();
+
+	}
+
+	public Line getOrientedEdge() {
+		// spravne orientovane hrany
+		if (first.getY() > last.getY()) {
+
+			return new Line(last, first);
+
+		}
+
+		return this;
+
+	}
+
+	public Boolean isIntersection(int y) {
+		if(y>=first.getY()&&y<last.getY())
+			return true;
+		return false;
+
+	}
+
+
+	public Integer intersection(int y) {
+		double k = (last.getX()-first.getX()) / (last.getY()-first.getY());
+		double q = first.getX() - (k * first.getY());
+		return (int) (k*y+q);
+	}
+
 }

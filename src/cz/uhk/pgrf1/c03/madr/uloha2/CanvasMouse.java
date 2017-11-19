@@ -21,6 +21,7 @@ import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.LineRenderer;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.PolygonRenderer;
+import cz.uhk.pgrf1.c03.madr.uloha2.render.ScanLineRenderer;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.SeedFillRenderer;
 
 /**
@@ -129,9 +130,11 @@ public class CanvasMouse {
 				else {
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						SeedFillRenderer sfren = new SeedFillRenderer(img);
+						ScanLineRenderer slren = new ScanLineRenderer(img);
 						switch (mode) {
 						case 1:
-							
+							slren.fill(polCutter);
+							panel.repaint();
 							break;
 						case 2:
 							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()));

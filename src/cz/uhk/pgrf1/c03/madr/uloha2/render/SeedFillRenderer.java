@@ -12,7 +12,7 @@ public class SeedFillRenderer extends Renderer {
 
 	public void draw(Point p, int color) {
 		//vzor
-		int[][] vzor = {
+		int[][] pattern = {
 				{0xFF0000,0xFF0000,0xFF0000},
 				{0xFF0000,0xFF0000,0xFF0000},
 				{0xFF0000,0xFF0000,0xFF0000},
@@ -27,7 +27,7 @@ public class SeedFillRenderer extends Renderer {
 		int y= (int)p.getY();
 		int i = x % 8;
 		int	j = y % 3;
-		int pcolor=vzor[i][j];
+		int pcolor=pattern[i][j];
 		
 		// point celociselna pozice v img
 		int bgColor = img.getRGB(x, y);
