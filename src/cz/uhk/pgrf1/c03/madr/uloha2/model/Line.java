@@ -65,7 +65,8 @@ public class Line {
 	public Integer intersection(int y) {
 		double k = (last.getX()-first.getX()) / (last.getY()-first.getY());
 		double q = first.getX() - (k * first.getY());
-		return (int) (k*y+q);
+		int x = (int) (k*y+q) ;
+		return x;
 	}
 
 }

@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
-
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
@@ -75,20 +75,26 @@ public class CanvasMouse {
 		// Ovladaci panel
 		JPanel pnl = new JPanel();
 		frame.add(pnl, BorderLayout.NORTH);
+		JLabel lbl = new JLabel("Left Button Mode: ");
 		JRadioButton polygonButton = new JRadioButton("Draw Polygons");
 		polygonButton.addActionListener(e -> setMode(0));
 		polygonButton.setSelected(true);
 		JRadioButton seedFillButton = new JRadioButton("Fill with SeedFill");
-		seedFillButton.addActionListener(e -> setMode(2));
-		JRadioButton scanLineButton = new JRadioButton("Fill with ScanLine");
+		JRadioButton seedFillPatternButton = new JRadioButton("Fill with SeedFill (pattern)");
+		seedFillPatternButton.addActionListener(e -> setMode(2));
+		seedFillButton.addActionListener(e -> setMode(3));
+		JRadioButton scanLineButton = new JRadioButton("Fill drawn Polygon with ScanLine");
 		scanLineButton.addActionListener(e -> setMode(1));
 		ButtonGroup group = new ButtonGroup();
 		group.add(polygonButton);
 		group.add(seedFillButton);
+		group.add(seedFillPatternButton);
 		group.add(scanLineButton);
+		pnl.add(lbl);
 		pnl.add(polygonButton);
 		pnl.add(scanLineButton);
 		pnl.add(seedFillButton);
+		pnl.add(seedFillPatternButton);
 
 		// Konec ovladaciho panelu
 		frame.add(panel);
@@ -133,11 +139,28 @@ public class CanvasMouse {
 						ScanLineRenderer slren = new ScanLineRenderer(img);
 						switch (mode) {
 						case 1:
-							slren.fill(polCutter);
-							panel.repaint();
+							if (pol.getSize() > 2) {
+								slren.fill(pol);
+								panel.repaint();
+							}
 							break;
 						case 2:
-							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()));
+							System.out.println("case 2");
+							int[][] pattern = { { 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }, { 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }, { 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }
+
+							};
+							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()), pattern);
+							panel.repaint();
+							break;
+						case 3:
+							int[][] color = { { 0xFFFFFA }
+
+							};
+							System.out.println(color.length);
+							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()), color);
 							panel.repaint();
 							break;
 						}
@@ -147,7 +170,7 @@ public class CanvasMouse {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				
+
 				PolygonRenderer pren = new PolygonRenderer(img);
 				if (mode == 0) {
 					if (e.getButton() == MouseEvent.BUTTON1) {
@@ -296,6 +319,9 @@ public class CanvasMouse {
 		case 2:
 			mode = 2;
 			System.out.println(mode);
+			break;
+		case 3:
+			mode = 3;
 			break;
 		}
 
