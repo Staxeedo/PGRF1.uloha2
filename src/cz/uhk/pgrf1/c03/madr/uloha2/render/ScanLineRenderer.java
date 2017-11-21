@@ -3,9 +3,12 @@ package cz.uhk.pgrf1.c03.madr.uloha2.render;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.uhk.pgrf1.c03.madr.uloha2.CanvasMouse;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Line;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
+import cz.uhk.pgrf1.c03.madr.uloha2.sort.Sort;
 
 public class ScanLineRenderer extends Renderer {
 
@@ -22,16 +25,10 @@ public class ScanLineRenderer extends Renderer {
 		Point max = findMax(pol);
 		
 		List<Integer> points = new ArrayList<>();
-
+		Sort sort = new Sort();
 		// prokopiruju vrcholy z polygonu
-		for (int i = 0; i < pol.getSize(); i++) {
+		copyEdges(pol);
 
-			// spoji nam to s polednim bodem
-			Line e = new Line(pol.getPoint(i), pol.getPoint((i + 1) % pol.getSize()));
-			// seznam orientovany hran
-			edges.add(e.getOrientedEdge());
-
-		}
 
 		int yMin = (int) min.getY();
 		int yMax = (int) max.getY();
@@ -39,7 +36,6 @@ public class ScanLineRenderer extends Renderer {
 		int x;
 
 		for (int y = yMin; y <= yMax; y++) {
-			System.out.println(y + " souradnice");
 			// projit vsechny hrany a zjistit jestli existuje prusecik
 			for (Line e : edges) {
 				if (e.isIntersection(y)) {
@@ -50,13 +46,18 @@ public class ScanLineRenderer extends Renderer {
 			}
 
 			// Sort
-			quickSort(points,0,points.size()-1);
-			//java.util.Collections.sort(points); // doplnit sort
-
-			for (int i = 0; i < points.size() - 1; i += 2) {
+			
+		  sort.sort(points,0);
+		  List<Integer> sorted= new ArrayList<>(sort.getSortedList());
+			
+			
+	//	java.util.Collections.sort(points); // doplnit sort
+		
+	
+			for (int i = 0; i < sorted.size() - 1; i += 2) {
 				// vykreslujeme pixel po pixlu
-				Line line = new Line(new Point(points.get(i), y), new Point(points.get(i + 1), y));
-				lren.draw(line, 0xFFFF00);
+				Line line = new Line(new Point(sorted.get(i), y), new Point(sorted.get(i + 1), y));
+				lren.draw(line, 0xFFFFFF);
 			}
 
 			points.clear();
@@ -65,41 +66,12 @@ public class ScanLineRenderer extends Renderer {
 		}
 		// prekreslim obrys
 		PolygonRenderer pren = new PolygonRenderer(img);
-		pren.draw(pol, 0x0000FF);
+		pren.draw(pol, CanvasMouse.polColor);
 		// vymazani pole s vrcholy
 		edges.clear();
 
 	}
-// algoritmus z algoritmy.net
-	public void quickSort(List<Integer> list,int lBound, int rBound)
-	{
-		
-		if(lBound < rBound)
-		{
-			int bound = lBound;
-			for(int i = lBound +1;i<rBound;i++)
-			{
-				if(list.get(i)>list.get(lBound))
-				{
-					swap(list,lBound,++bound);
-				}
-					
-					
-			}
-			swap(list,lBound,bound);
-			quickSort(list,lBound,bound);
-			quickSort(list,bound+1,rBound);
-			
-		}
-		
-	}
-	
-	private void swap(List<Integer>list,int lBound,int rBound)
-	{
-		int tmp = list.get(rBound);
-		list.set(rBound,list.get(lBound));
-		list.set(lBound,tmp);
-	}
+
 	private Point findMin(Polygon pol)
 	{
 		Point min = pol.getPoint(0);
@@ -125,6 +97,17 @@ public class ScanLineRenderer extends Renderer {
 		}
 		return max;
 		
+	}
+	private void copyEdges(Polygon pol)
+	{
+		for (int i = 0; i < pol.getSize(); i++) {
+
+			// spoji nam to s polednim bodem
+			Line e = new Line(pol.getPoint(i), pol.getPoint((i + 1) % pol.getSize()));
+			// seznam orientovany hran
+			edges.add(e.getOrientedEdge());
+
+		}
 	}
 
 }

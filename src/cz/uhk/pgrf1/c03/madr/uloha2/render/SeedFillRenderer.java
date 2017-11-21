@@ -2,6 +2,7 @@ package cz.uhk.pgrf1.c03.madr.uloha2.render;
 
 import java.awt.image.BufferedImage;
 
+import cz.uhk.pgrf1.c03.madr.uloha2.CanvasMouse;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 
 public class SeedFillRenderer extends Renderer {
@@ -32,7 +33,7 @@ public class SeedFillRenderer extends Renderer {
 		int bgColor = img.getRGB(x, y);
 
 		// if jsme uvnitr?
-		if (bgColor == color) {
+		if (bgColor == color&&color!=CanvasMouse.polColor&&color!=CanvasMouse.polCutterColor) {
 
 			// img.setRGB(x, y, 0xFFFFCA);
 			img.setRGB(x, y, pcolor);
@@ -44,5 +45,6 @@ public class SeedFillRenderer extends Renderer {
 		}
 
 	}
+	
 
 }

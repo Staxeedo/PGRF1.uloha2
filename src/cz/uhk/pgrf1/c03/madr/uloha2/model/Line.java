@@ -69,4 +69,14 @@ public class Line {
 		return x;
 	}
 
+	public Boolean isInside(Point v2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Point intersection(Point v1, Point v2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -34,6 +34,9 @@ import cz.uhk.pgrf1.c03.madr.uloha2.render.SeedFillRenderer;
  * @version 2017
  */
 public class CanvasMouse {
+	// barvy hranic polygonu
+	public static int polCutterColor = 0x0000FF;
+	public static int polColor = 0xFFFF00;
 
 	private JPanel panel;
 	Boolean outOfField = false;
@@ -145,7 +148,6 @@ public class CanvasMouse {
 							}
 							break;
 						case 2:
-							System.out.println("case 2");
 							int[][] pattern = { { 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
 									{ 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
 									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }, { 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
@@ -188,8 +190,8 @@ public class CanvasMouse {
 							pol.add(tempLine.getLast());
 						}
 
-						pren.draw(pol, 0xFFFF00);
-						pren.draw(polCutter, 0x0000FF);
+						pren.draw(pol, polColor);
+						pren.draw(polCutter, polCutterColor);
 						// Pokud se na platne nachazi vysec, tak ji vykreslim (bylo vypocitano r)
 
 					}
@@ -208,8 +210,8 @@ public class CanvasMouse {
 
 					}
 
-					pren.draw(pol, 0xFFFF00);
-					pren.draw(polCutter, 0x0000FF);
+					pren.draw(pol, polColor);
+					pren.draw(polCutter, polCutterColor);
 
 				}
 			}
@@ -236,8 +238,8 @@ public class CanvasMouse {
 						if (pol.getSize() >= 2) {
 							tempLine2.setLast(p);
 							tempLine2.setFirst(pol.getPoint(0));
-							pren.draw(pol, 0xFFFF00);
-							pren.draw(polCutter, 0x0000FF);
+							pren.draw(pol, polColor);
+							pren.draw(polCutter, polCutterColor);
 
 							try {
 								lren.draw(tempLine, 0xFF0000);
@@ -250,14 +252,14 @@ public class CanvasMouse {
 							} catch (ArrayIndexOutOfBoundsException exception) {
 								outOfField = true;
 								clear();
-								pren.draw(pol, 0xFFFF00);
-								pren.draw(polCutter, 0x0000FF);
+								pren.draw(pol, polColor);
+								pren.draw(polCutter, polCutterColor);
 							}
 						}
 
 						else {
 							// pro vykresleni prvni cary
-							pren.draw(polCutter, 0x0000FF);
+							pren.draw(polCutter, polCutterColor);
 							try {
 								lren.draw(tempLine, 0xFF0000);
 								if (outOfField == true) {
@@ -266,8 +268,8 @@ public class CanvasMouse {
 							} catch (ArrayIndexOutOfBoundsException exception) {
 								outOfField = true;
 								clear();
-								pren.draw(pol, 0xFFFF00);
-								pren.draw(polCutter, 0x0000FF);
+								pren.draw(pol, polColor);
+								pren.draw(polCutter, polCutterColor);
 							}
 
 						}
@@ -276,8 +278,8 @@ public class CanvasMouse {
 						System.out.println("2");
 						tempLine2.setLast(p);
 						tempLine2.setFirst(polCutter.getPoint(0));
-						pren.draw(pol, 0xFFFF00);
-						pren.draw(polCutter, 0x0000FF);
+						pren.draw(pol, polColor);
+						pren.draw(polCutter, polCutterColor);
 
 						try {
 							lren.draw(tempLine, 0xFF0000);
@@ -290,8 +292,8 @@ public class CanvasMouse {
 						} catch (ArrayIndexOutOfBoundsException exception) {
 							outOfField = true;
 							clear();
-							pren.draw(pol, 0xFFFF00);
-							pren.draw(polCutter, 0x0000FF);
+							pren.draw(pol, polColor);
+							pren.draw(polCutter, polCutterColor);
 						}
 
 					}
@@ -309,16 +311,13 @@ public class CanvasMouse {
 		switch (number) {
 		case 0:
 			mode = 0;
-			System.out.println(mode);
 			break;
 		case 1:
 
 			mode = 1;
-			System.out.println(mode);
 			break;
 		case 2:
 			mode = 2;
-			System.out.println(mode);
 			break;
 		case 3:
 			mode = 3;
@@ -339,10 +338,9 @@ public class CanvasMouse {
 
 	public void start() {
 		clear();
-		img.getGraphics().drawString("Use mouse buttons Left for polygon, Right for Circle Sector", 5,
-				img.getHeight() - 5);
+
 		PolygonRenderer pren = new PolygonRenderer(img);
-		pren.draw(polCutter, 0x0000FF);
+		pren.draw(polCutter, polCutterColor);
 		panel.repaint();
 	}
 
