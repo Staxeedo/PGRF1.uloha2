@@ -47,16 +47,16 @@ public class ScanLineRenderer extends Renderer {
 
 			// Sort
 			
-		  sort.sort(points,0);
-		  List<Integer> sorted= new ArrayList<>(sort.getSortedList());
+		// sort.sort(points,0);
+		 // List<Integer> sorted= new ArrayList<>(sort.getSortedList());
 			
 			
-	//	java.util.Collections.sort(points); // doplnit sort
+	java.util.Collections.sort(points); // doplnit sort
 		
 	
-			for (int i = 0; i < sorted.size() - 1; i += 2) {
+			for (int i = 0; i < points.size() - 1; i += 2) {
 				// vykreslujeme pixel po pixlu
-				Line line = new Line(new Point(sorted.get(i), y), new Point(sorted.get(i + 1), y));
+				Line line = new Line(new Point(points.get(i), y), new Point(points.get(i + 1), y));
 				lren.draw(line, 0xFFFFFF);
 			}
 

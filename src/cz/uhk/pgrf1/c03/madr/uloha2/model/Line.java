@@ -69,14 +69,46 @@ public class Line {
 		return x;
 	}
 
-	public Boolean isInside(Point v2) {
-		// TODO Auto-generated method stub
-		return false;
+	public Boolean isInside(Point v) {
+		int x = (int)v.getX();
+		int y = (int)v.getY();
+		int aX = (int)first.getX();
+		int aY = (int)first.getY();
+		int bX= (int)last.getX();
+		int bY = (int)last.getY();
+		
+		
+		int side = ((bX-aX)*(y-aY)-(bY-aY)*(x-aX));
+		System.out.println(side);
+		if(side<0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
 	public Point intersection(Point v1, Point v2) {
-		// TODO Auto-generated method stub
-		return null;
+		int x0,y0;
+		int x1 = (int)first.getX();
+		int y1 = (int)first.getY();
+		int x2 = (int)last.getX();
+		int y2= (int)last.getY();
+		int x3 = (int)v2.getX();
+		int y3 = (int)v2.getY();
+		int x4 = (int)v1.getX();
+		int y4 = (int)v1.getY();
+		
+		
+		
+		x0=((x1*y2-x2*y1)*(x3-x4)-(x3*y4-x4*y3)*(x1-x2))
+				/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+		y0=((x1*y2-x2*y1)*(y3-y4)-(x3*y4-x4*y3)*(y1-y2))
+			/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+		return new Point(x0,y0);
 	}
 
 }

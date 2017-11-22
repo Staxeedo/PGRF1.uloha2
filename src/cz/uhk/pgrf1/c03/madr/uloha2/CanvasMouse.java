@@ -16,6 +16,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import cz.uhk.pgrf1.c03.madr.uloha2.clip.Clipper;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Line;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
@@ -143,7 +144,13 @@ public class CanvasMouse {
 						switch (mode) {
 						case 1:
 							if (pol.getSize() > 2) {
-								slren.fill(pol);
+								//slren.fill(pol);
+								Clipper clip = new Clipper(polCutter);
+								
+								Polygon clippedPol = new Polygon(clip.clipPoly(pol));
+									slren.fill(clippedPol);
+								
+								
 								panel.repaint();
 							}
 							break;

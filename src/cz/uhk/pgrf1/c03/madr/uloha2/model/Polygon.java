@@ -20,6 +20,12 @@ public class Polygon {
 		points.add(three);
 	}
 
+	public Polygon(Polygon clipedPoly) {
+		for(int i = 0; i<clipedPoly.getSize();i++)
+		{
+			this.points.add(clipedPoly.getPoint(i));
+		}
+	}
 	public void add(Point p) {
 		points.add(p);
 	}
@@ -39,6 +45,10 @@ public class Polygon {
 	public Point getLast() {
 		return points.get(getSize() - 1);
 
+	}
+	public void clearPolygon()
+	{
+		this.points.clear();
 	}
 
 }
