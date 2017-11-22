@@ -23,12 +23,11 @@ public class ScanLineRenderer extends Renderer {
 		// nalezeni extremu
 		Point min = findMin(pol);
 		Point max = findMax(pol);
-		
+
 		List<Integer> points = new ArrayList<>();
 		Sort sort = new Sort();
 		// prokopiruju vrcholy z polygonu
 		copyEdges(pol);
-
 
 		int yMin = (int) min.getY();
 		int yMax = (int) max.getY();
@@ -46,14 +45,12 @@ public class ScanLineRenderer extends Renderer {
 			}
 
 			// Sort
-			
-		// sort.sort(points,0);
-		 // List<Integer> sorted= new ArrayList<>(sort.getSortedList());
-			
-			
-	java.util.Collections.sort(points); // doplnit sort
-		
-	
+
+			// sort.sort(points,0);
+			// List<Integer> sorted= new ArrayList<>(sort.getSortedList());
+
+			java.util.Collections.sort(points); // doplnit sort
+
 			for (int i = 0; i < points.size() - 1; i += 2) {
 				// vykreslujeme pixel po pixlu
 				Line line = new Line(new Point(points.get(i), y), new Point(points.get(i + 1), y));
@@ -72,8 +69,7 @@ public class ScanLineRenderer extends Renderer {
 
 	}
 
-	private Point findMin(Polygon pol)
-	{
+	private Point findMin(Polygon pol) {
 		Point min = pol.getPoint(0);
 		for (int i = 0; i < pol.getSize(); i++) {
 			if (pol.getPoint(i).getY() < min.getY()) {
@@ -83,11 +79,10 @@ public class ScanLineRenderer extends Renderer {
 
 		}
 		return min;
-		
+
 	}
-	
-	private Point findMax(Polygon pol)
-	{
+
+	private Point findMax(Polygon pol) {
 		Point max = pol.getPoint(0);
 		for (int i = 0; i < pol.getSize(); i++) {
 			if (pol.getPoint(i).getY() > max.getY()) {
@@ -96,10 +91,10 @@ public class ScanLineRenderer extends Renderer {
 
 		}
 		return max;
-		
+
 	}
-	private void copyEdges(Polygon pol)
-	{
+
+	private void copyEdges(Polygon pol) {
 		for (int i = 0; i < pol.getSize(); i++) {
 
 			// spoji nam to s polednim bodem

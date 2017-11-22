@@ -87,7 +87,7 @@ public class CanvasMouse {
 		JRadioButton seedFillPatternButton = new JRadioButton("Fill with SeedFill (pattern)");
 		seedFillPatternButton.addActionListener(e -> setMode(2));
 		seedFillButton.addActionListener(e -> setMode(3));
-		JRadioButton scanLineButton = new JRadioButton("Fill drawn Polygon with ScanLine");
+		JRadioButton scanLineButton = new JRadioButton("Fill clipped Polygon with ScanLine");
 		scanLineButton.addActionListener(e -> setMode(1));
 		ButtonGroup group = new ButtonGroup();
 		group.add(polygonButton);

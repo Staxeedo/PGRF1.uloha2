@@ -92,15 +92,15 @@ public class Line {
 	}
 
 	public Point intersection(Point v1, Point v2) {
-		int x0,y0;
-		int x1 = (int)first.getX();
-		int y1 = (int)first.getY();
-		int x2 = (int)last.getX();
-		int y2= (int)last.getY();
-		int x3 = (int)v2.getX();
-		int y3 = (int)v2.getY();
-		int x4 = (int)v1.getX();
-		int y4 = (int)v1.getY();
+		double x0,y0;
+		double x1 = first.getX();
+		double y1 = first.getY();
+		double x2 = last.getX();
+		double y2= last.getY();
+		double x3 = v2.getX();
+		double y3 = v2.getY();
+		double x4 = v1.getX();
+		double y4 = v1.getY();
 		
 		
 		
