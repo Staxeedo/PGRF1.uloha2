@@ -26,7 +26,7 @@ public class Sort {
 						swap(lBound,++bound);
 					}
 						
-						
+					//push	
 				}
 				swap(lBound,bound);
 				quicksort(lBound,bound);
