@@ -9,6 +9,8 @@ public class SeedFillRenderer extends Renderer {
 
 	public SeedFillRenderer(BufferedImage img) {
 		super(img);
+		int polColor= CanvasMouse.polColor;
+		int polCutterColor=CanvasMouse.polCutterColor;
 	}
 
 	public void draw(Point p, int color, int[][] pattern) {
@@ -19,14 +21,12 @@ public class SeedFillRenderer extends Renderer {
 		int x = (int) p.getX();
 		int y = (int) p.getY();
 		int i, j, pcolor;
-		if (pattern.length == 1) {
-		 pcolor=pattern[0][0];
-		} else {
-			
-			i = x % 8;
-			j = y % 3;
+		
+	
+			//predelat to na to modulo, z 
+			i = x % pattern.length;// u vetsiho pattern(%8)
+			j = y % pattern[0].length;// u vetsiho patter (%1)
 			pcolor = pattern[i][j];
-		}
 		
 
 		// point celociselna pozice v img

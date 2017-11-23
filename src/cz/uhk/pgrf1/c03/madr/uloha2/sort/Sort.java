@@ -10,42 +10,25 @@ public class Sort {
 	   public void sort(List<Integer> list,int alg) {
 	        sortedList = list;
 	        if(alg==0)
-	        quicksort(0, sortedList.size() - 1);
-	    }
-	
-		public  void  quicksort(int lBound, int rBound)
+	        insertSort();
+	   }
+		public  void  insertSort()
 		{
-						
-			if(lBound < rBound)
-			{
-				int bound = lBound;
-				for(int i = lBound +1;i<rBound;i++)
-				{
-					if(sortedList.get(i)>sortedList.get(lBound))
-					{
-						swap(lBound,++bound);
-					}
-						
-					//push	
-				}
-				swap(lBound,bound);
-				quicksort(lBound,bound);
-				quicksort(bound+1,rBound);
-				
-			}
-
+			for (int i = 0; i < sortedList.size() - 1; i++) {
 			
+				int j = i+1;
+				int temp = sortedList.get(j);
+				while(j>0&&temp>sortedList.get(j-1))
+				{
+					sortedList.set(j, sortedList.get(j-1));
+					j--;
+				}
+				sortedList.set(j, temp);
+			}
+						
 		
 		}
 		
-		private  void swap(int lBound,int rBound)
-		{
-			int tmp = sortedList.get(rBound);
-			sortedList.set(rBound,sortedList.get(lBound));
-			sortedList.set(lBound,tmp);
-		}
-		
-
 		public List<Integer> getSortedList()
 		{
 			return sortedList;
