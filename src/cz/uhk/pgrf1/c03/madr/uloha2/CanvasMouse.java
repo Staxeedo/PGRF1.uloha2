@@ -26,11 +26,17 @@ import cz.uhk.pgrf1.c03.madr.uloha2.render.ScanLineRenderer;
 import cz.uhk.pgrf1.c03.madr.uloha2.render.SeedFillRenderer;
 
 /**
- * trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi drzenim a
- * tazenim leveho tlacitka krelim primku a pridavam body polygonu drzenim a
- * tazenim praveho tlacitka vykresluju kruznici, po spusteni kreslim vysec
- * pomoci tazeni mysi
- * 
+ * Trida pro kresleni na platno: zobrazeni pixelu, ovladani mysi. Pomoci radio
+ * buttonu na hornim panelu vybereme mod.
+ * Kvuli SeedFill vlozit do Run Arguments VM -Xss100m
+ * Draw polygons => pomoci leveho tlacitka kreslime polygon, ktery ma byt oriznut 
+ * 				 => pomoci praveho tlacitka kreslime orezavaci polygon
+ * Fill clipped Polygon with ScanLine
+ * 				 => Po stisknuti leveho tlacitka mysi se orizne polygon a tento vysledny Polygon se vybarvi
+ * Fill with SeedFill
+ * 				 => Po stisknuti leveho tlacitka na platno se vybrana plocha vybarvi jednou barvou pomoci SeedFillu
+ * Fill with SeedFill
+ * 				 => Po stisknuti leveho tlacitka na platno se vybrana plocha vybarvi vzorem pomoci SeedFillu
  * @author PGRF FIM UHK
  * @version 2017
  */
@@ -47,6 +53,7 @@ public class CanvasMouse {
 	Line tempLine2 = new Line();
 
 	Polygon pol = new Polygon();
+	// Polygon pro orezavani
 	Polygon polCutter = new Polygon(new Point(29, 24), new Point(104, 598), new Point(476, 481));
 
 	/*
@@ -54,6 +61,7 @@ public class CanvasMouse {
 	 * kresleni polygonu
 	 */
 	int step = 0;
+	// slouzi pro ulozeni modu vybraneho na hornim panelu
 	int mode = 0;
 
 	public CanvasMouse(int width, int height) {
@@ -79,6 +87,7 @@ public class CanvasMouse {
 		// Ovladaci panel
 		JPanel pnl = new JPanel();
 		frame.add(pnl, BorderLayout.NORTH);
+		// implementace panelu
 		JLabel lbl = new JLabel("Left Button Mode: ");
 		JRadioButton polygonButton = new JRadioButton("Draw Polygons");
 		polygonButton.addActionListener(e -> setMode(0));
@@ -100,7 +109,7 @@ public class CanvasMouse {
 		pnl.add(seedFillButton);
 		pnl.add(seedFillPatternButton);
 
-		// Konec ovladaciho panelu
+		
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
@@ -144,31 +153,35 @@ public class CanvasMouse {
 						switch (mode) {
 						case 1:
 							if (pol.getSize() > 2) {
-								//slren.fill(pol);
-								Clipper clip = new Clipper(polCutter);
 								
+								Clipper clip = new Clipper(polCutter);
+								// Pokud polCutter neni konvexni, tak to vyhodi IndexOutOfBoundsException();
 								Polygon clippedPol = new Polygon(clip.clipPoly(pol));
 								slren.fill(clippedPol);
-							
-								
+
 								panel.repaint();
 							}
 							break;
 						case 2:
-							int[][] pattern = { { 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
-									{ 0xFF0000, 0xFF0000, 0xFF0000 }, { 0xFF0000, 0xFF0000, 0xFF0000 },
-									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }, { 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
-									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }, { 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }
+							int[][] pattern = { 
+									{ 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFF0000, 0xFF0000, 0xFF0000 },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF },
+									{ 0xFFFFFF, 0xFFFFFF, 0xFFFFFF }
 
 							};
 							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()), pattern);
 							panel.repaint();
 							break;
 						case 3:
+							// vybarvi se jen 1 barvou
 							int[][] color = { { 0xFFFFFA }
 
-							};
-							System.out.println(color.length);
+						    };
 							sfren.draw(p, img.getRGB((int) p.getX(), (int) p.getY()), color);
 							panel.repaint();
 							break;
@@ -199,7 +212,7 @@ public class CanvasMouse {
 
 						pren.draw(pol, polColor);
 						pren.draw(polCutter, polCutterColor);
-						// Pokud se na platne nachazi vysec, tak ji vykreslim (bylo vypocitano r)
+						
 
 					}
 

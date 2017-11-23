@@ -9,9 +9,12 @@ import cz.uhk.pgrf1.c03.madr.uloha2.model.Line;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
 import cz.uhk.pgrf1.c03.madr.uloha2.sort.Sort;
-
+/**
+ * trida pro vyplneni polygonu pomoci ScanLine
+ * Doimplementovani kodu ze cviceni 
+ */
 public class ScanLineRenderer extends Renderer {
-
+	int polColor = CanvasMouse.polColor;
 	List<Line> edges = new ArrayList<>();
 
 	public ScanLineRenderer(BufferedImage img) {
@@ -48,31 +51,22 @@ public class ScanLineRenderer extends Renderer {
 			}
 
 			// Sort
-
 			sort.sort(points,0);
 			points=new ArrayList<>(sort.getSortedList());
-
-			//java.util.Collections.sort(points); // doplnit sort
+			//java.util.Collections.sort(points);
 
 			for (int i = 0; i < points.size() - 1; i += 2) {
-				// vykreslujeme pixel po pixlu
 				Line line = new Line(new Point(points.get(i), y), new Point(points.get(i + 1), y));
 				lren.draw(line, 0xFFFFFF);
 			}
 
 			points.clear();
-			// jeste prekresleni hranice
-			// jina barva hranice a jina barva vyplneni
 		}
 	
-		
+		// prekresleni hranice Polygonu
 		PolygonRenderer pren = new PolygonRenderer(img);
 		
-		pren.draw(pol, CanvasMouse.polColor);
-		
-		
-		
-		// vymazani pole s vrcholy
+		pren.draw(pol,polColor);
 		edges.clear();
 		}
 
@@ -105,11 +99,9 @@ public class ScanLineRenderer extends Renderer {
 
 	private void copyEdges(Polygon pol) {
 		for (int i = 0; i < pol.getSize(); i++) {
-
-			// spoji nam to s polednim bodem
 			Line e = new Line(pol.getPoint(i), pol.getPoint((i + 1) % pol.getSize()));
 			// seznam orientovany hran
-			edges.add(e.getOrientedEdge());
+			edges.add(e.getOrientedLine());
 
 		}
 	}

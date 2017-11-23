@@ -5,8 +5,8 @@ import cz.uhk.pgrf1.c03.madr.uloha2.model.Point;
 import cz.uhk.pgrf1.c03.madr.uloha2.model.Polygon;
 /**
  * Tøída pro oøezávání polygonu
- * Navázáno na kód ze cvièení
- * @author stand
+ * Doimplementovani kódu ze cvièení
+ * @author Stanislav Madr
  *
  */
 public class Clipper {
@@ -14,7 +14,6 @@ public class Clipper {
 
 	public Clipper(Polygon pol) {
 		this.clipper = pol;
-		// zde volam orezavaci polygon
 	}
 
 	public Polygon clipPoly(Polygon clipPoly) {
@@ -46,7 +45,6 @@ public class Clipper {
 			}
 
 		}
-		// pokud je zavolany polygon mimo cutter
 		return out;
 	}
 

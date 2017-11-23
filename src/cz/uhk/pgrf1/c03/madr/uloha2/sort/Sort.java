@@ -1,8 +1,11 @@
 package cz.uhk.pgrf1.c03.madr.uloha2.sort;
 
-import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 
+ * Trida pro sortovani pole
+ *
+ */
 public class Sort {
 	List<Integer> sortedList;
 	

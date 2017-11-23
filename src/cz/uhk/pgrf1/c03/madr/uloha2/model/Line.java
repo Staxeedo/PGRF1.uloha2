@@ -42,8 +42,8 @@ public class Line {
 
 	}
 
-	public Line getOrientedEdge() {
-		// spravne orientovane hrany
+	public Line getOrientedLine() {
+		// spravne orientovana primka
 		if (first.getY() > last.getY()) {
 
 			return new Line(last, first);
@@ -63,6 +63,7 @@ public class Line {
 
 
 	public Integer intersection(int y) {
+		// dopocitani x pruseciku
 		double k = (last.getX()-first.getX()) / (last.getY()-first.getY());
 		double q = first.getX() - (k * first.getY());
 		int x = (int) (k*y+q) ;
@@ -70,6 +71,7 @@ public class Line {
 	}
 
 	public Boolean isInside(Point v) {
+		
 		int x = (int)v.getX();
 		int y = (int)v.getY();
 		int aX = (int)first.getX();
@@ -79,7 +81,7 @@ public class Line {
 		
 		
 		int side = ((bX-aX)*(y-aY)-(bY-aY)*(x-aX));
-		
+		// 3 stavy : 0 na primce, <0 na jedne strane primky, >0 na druhe strane primky
 		if(side<0)
 		{
 			return true;
@@ -92,6 +94,7 @@ public class Line {
 	}
 
 	public Point intersection(Point v1, Point v2) {
+		// metoda pro vypocet pruseciku pomoci primky a dvou bodu
 		double x0,y0;
 		double x1 = first.getX();
 		double y1 = first.getY();
