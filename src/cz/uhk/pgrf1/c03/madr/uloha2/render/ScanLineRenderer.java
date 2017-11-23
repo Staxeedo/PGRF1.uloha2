@@ -19,8 +19,11 @@ public class ScanLineRenderer extends Renderer {
 	}
 
 	public void fill(Polygon pol) {
+		if(pol.getSize()>0)
+		{
 		LineRenderer lren = new LineRenderer(img);
 		// nalezeni extremu
+	
 		Point min = findMin(pol);
 		Point max = findMax(pol);
 
@@ -61,11 +64,17 @@ public class ScanLineRenderer extends Renderer {
 			// jeste prekresleni hranice
 			// jina barva hranice a jina barva vyplneni
 		}
-		// prekreslim obrys
+	
+		
 		PolygonRenderer pren = new PolygonRenderer(img);
+		
 		pren.draw(pol, CanvasMouse.polColor);
+		
+		
+		
 		// vymazani pole s vrcholy
 		edges.clear();
+		}
 
 	}
 

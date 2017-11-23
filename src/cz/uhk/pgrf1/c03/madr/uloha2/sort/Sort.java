@@ -6,7 +6,7 @@ import java.util.List;
 public class Sort {
 	List<Integer> sortedList;
 	
-	// algoritmus z algoritmy.net
+	
 	   public void sort(List<Integer> list,int alg) {
 	        sortedList = list;
 	        if(alg==0)

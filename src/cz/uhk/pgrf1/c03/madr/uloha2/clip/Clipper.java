@@ -18,7 +18,6 @@ public class Clipper {
 	}
 
 	public Polygon clipPoly(Polygon clipPoly) {
-
 		Polygon out = new Polygon(clipPoly);
 		// pro veskere hrany toho orezavaciho polygonu
 		// orezavaci polygon je konvexni
@@ -47,7 +46,7 @@ public class Clipper {
 			}
 
 		}
-
+		// pokud je zavolany polygon mimo cutter
 		return out;
 	}
 

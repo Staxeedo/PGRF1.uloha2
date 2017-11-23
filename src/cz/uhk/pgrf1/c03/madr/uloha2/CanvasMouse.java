@@ -148,8 +148,8 @@ public class CanvasMouse {
 								Clipper clip = new Clipper(polCutter);
 								
 								Polygon clippedPol = new Polygon(clip.clipPoly(pol));
-									slren.fill(clippedPol);
-								
+								slren.fill(clippedPol);
+							
 								
 								panel.repaint();
 							}

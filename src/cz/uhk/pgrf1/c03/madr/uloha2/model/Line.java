@@ -79,7 +79,7 @@ public class Line {
 		
 		
 		int side = ((bX-aX)*(y-aY)-(bY-aY)*(x-aX));
-		System.out.println(side);
+		
 		if(side<0)
 		{
 			return true;
